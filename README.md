@@ -1,12 +1,25 @@
 ## Setup
-+ For all our experiments we build upon the Deep Learning AMI provided by AWS.
-+ Start an instance with Deep Learning AMI.
-+ Download imagenet data and follow the preprocessing instructions from (here)[https://github.com/pytorch/examples/tree/master/imagenet]
-+ Next for BERT Download the Sogou News dataset follow the original repo to prepare dataset and BERT models available [here](https://github.com/xuyige/BERT4doc-Classification/blob/master/README.md).
++ We have provided a public AMI- *ami-0eea3ad7fabaa0125* with all the dependencies installed.
++ If the user wants to write out results automatically to s3 bucket, they will need to create an IAM role allowing EC2 to write code to S3. Details for it can be found [here](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Integrating.Authorizing.IAM.S3CreatePolicy.html). If the role is not provide the code will just write to local disk.
++ The code can be launched with some minor configuration changes in launch_ec2_run_commands.py
++ If using the provided AMI no other changes are are needed.
 
-Data available at: [here](https://drive.google.com/drive/folders/1Rbi0tnvsQrsHvT_353pMdIbRwDlLhfwM).
+## Running the code
 
-Some additional datasets available at: [here](https://course.fast.ai/datasets).
+Running the code with the AMI:
+The code borrows a lot of structure from Thijis Vogels's code for PowerSGD.
++ To launch EC2 instances automatically look at launch_ec2_run_commands.py 
++ Ideally the user will only need to provide their ssh key and the ssh key_path.
++ You also need to provide the bash file which will eventually launch the code.
++ We have already provided the bash file and added in the run commands on line 127 in launch_ec2_run_commands.py
++ Look at run_ddp.sh and sh for model which use imagenet  dataset.
+
+Running code without the AMI:
++ If the user wants to launch the code without using the AMI, they will need to install PyTorch 1.8.1+cu111 and bit2byte extension.
++ Then the user can launch run_ddp.sh manually on each node with appropriate parameters
+
+
+Sogou Dataset available at: [here](https://drive.google.com/drive/folders/1Rbi0tnvsQrsHvT_353pMdIbRwDlLhfwM).
 
 Models available at: 
 
@@ -14,21 +27,20 @@ Models available at:
 
 [BERT-Base, Chinese](https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip)
 
-+ Next create an AMI using the instructions provided [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) 
-+ Also create a new IAM role which will provide your EC2 instances permission to
-  write to S3
+## Acknowledgement
+The code borrows a lot of structure from code for 
+[PowerSGD](https://github.com/epfml/powersgd). We will like to thank the authors
+of PowerSGD for providing the code.
 
-## Running the code
+## Cite
+```
+@article{agarwal2021utility,
+  title={On the utility of gradient compression in distributed training systems},
+  author={Agarwal, Saurabh and Wang, Hongyi and Venkataraman, Shivaram and Papailiopoulos, Dimitris},
+  journal={arXiv preprint arXiv:2103.00543},
+  year={2021}
+}
 
-The code borrows a lot of structure from Thijis Vogels's code for PowerSGD.
-+ To launch the code look at launch_ec2_run_commands.py 
-+ You also need to provide the bash file which will eventually launch the code.
-+ Look at run_ddp.sh and run_dpp_var_bandwidth.sh for model which use imagenet
-  dataset.
-+ Look at run_ddp_bert.sh for running BERT model. 
-+ launch_ec2_run_commands.py when provided the github repository with code and
-  the bash file will automatically launch the code and write the data to S3
-
-+ The code to run is provided in main_ddp_final.py and main_bert.py
+```
 
 
